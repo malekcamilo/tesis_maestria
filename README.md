@@ -1,9 +1,9 @@
 # Estrategias de Adaptación Eficiente para Modelos de Lenguaje Abiertos
 
-> **Tesis de Maestría en Inteligencia de Datos Orientada a Big  Data**
-> Universidad Nacional de La Plata (UNLP) · Facultad de Informática
-> **Autor:** Malek Camilo
-> **Directores:** Juan Manuel Fernández · Marcelo Errecalde
+> **Tesis de Maestría en Inteligencia de Datos Orientada a Big Data**  
+> Universidad Nacional de La Plata (UNLP) · Facultad de Informática  
+> **Autor:** Malek Camilo  
+> **Directores:** Juan Manuel Fernández · Marcelo Errecalde  
 > **Año:** 2026
 
 Repositorio con el código fuente, conjuntos de datos y métricas de los experimentos realizados en la supercomputadora Clementina XXI. Incluye la implementación de seis estrategias de adaptación eficiente (LoRA, DoRA, QLoRA, QDoRA, GaLore y GaLore rSVD) aplicadas al modelo LLaMA 3.1 8B Instruct para la clasificación automática de documentos del repositorio institucional SEDICI.
