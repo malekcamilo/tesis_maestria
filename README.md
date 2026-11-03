@@ -17,10 +17,12 @@ tesis_maestria/
 ├── README.md
 ├── dataset/                              # Conjuntos de datos particionados (JSONL)
 ├── metricas/                             # Métricas consolidadas de los resultados (CSV)
+│   └── DDP/                              # Métricas consolidadas del entrenamiento distribuido (DDP)
 └── src/                                  # Código fuente organizado
     ├── preprocesamiento/                 # Scripts para transformar datos de SEDICI
     ├── experimentos/                     # Script Python para entrenamiento y evaluación
     ├── slurm/                            # Scripts de lanzamiento para Clementina
+    ├── DDP/                              # Entrenamiento distribuido (DDP) de DoRA en Clementina
     ├── scraping/                         # Scripts de recolección de datos
     ├── embeddings/                       # Ejemplos del estado del arte de embeddings
     └── tokenizacion/                     # Ejemplos del estado del arte de tokenización
@@ -29,8 +31,8 @@ tesis_maestria/
 | Carpeta                  | Qué es                                                                                                                                |
 | --------------------------| ---------------------------------------------------------------------------------------------------------------------------------------|
 | [`dataset/`](dataset/)   | Contiene las particiones de los datos procesados del repositorio SEDICI: `train_tesis.jsonl`, `val_tesis.jsonl` y `test_tesis.jsonl`. |
-| [`metricas/`](metricas/) | Archivos CSV con las métricas consolidadas (globales y por clases) obtenidas durante el entrenamiento y la evaluación.                |
-| [`src/`](src/)           | Código fuente organizado en subdirectorios temáticos (`preprocesamiento/`, `experimentos/`, etc.).                                    |
+| [`metricas/`](metricas/) | Archivos CSV con las métricas consolidadas (globales y por clases) obtenidas durante el entrenamiento y la evaluación. En [`metricas/DDP/`](metricas/DDP/), las del entrenamiento distribuido de DoRA r=32 con 1, 4 y 8 GPUs. |
+| [`src/`](src/)           | Código fuente organizado en subdirectorios temáticos (`preprocesamiento/`, `experimentos/`, `DDP/`, etc.).                            |
 
 ---
 
@@ -77,6 +79,18 @@ sbatch --job-name=svd-128-500-42 run_evaluacion_tesis_v2.sh --accion eval --meth
 ```
 
 > **Nota:** Internamente, los lanzadores (como `run_experimento_tesis_v2.sh`) deben invocar al script en Python `src/experimentos/experimento_sedici_tesis_v2.py` y pasarle estos mismos argumentos.
+
+#### Entrenamiento distribuido (DDP)
+
+El entrenamiento distribuido de DoRA r=32 (`all`) utiliza el script `experimento_peft_multi.py`, lanzado mediante `slurm_peft_clementina.sh` (ambos en `src/DDP/`). El lote por GPU es fijo (8), por lo que el lote global crece con la cantidad de GPUs.
+
+```bash
+# - Entrenamiento: 1 nodo × 4 GPUs (para 2 nodos × 4 GPUs: --nodes=2)
+sbatch --nodes=1 --ntasks-per-node=4 --gres=gpu:4 --job-name=dora-4t slurm_peft_clementina.sh --method dora --lora_r 32 --seed 42
+
+# - Evaluación (1 GPU) de un modelo entrenado con 2 nodos × 4 GPUs
+sbatch --nodes=1 --ntasks-per-node=1 --gres=gpu:1 --time=01:00:00 --job-name=eval-n2g4 slurm_peft_clementina.sh --method dora --lora_r 32 --seed 42 --accion eval --topologia n2_g4
+```
 
 ### Dependencias del Entorno (Clementina)
 

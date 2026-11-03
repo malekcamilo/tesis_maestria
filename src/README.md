@@ -9,6 +9,7 @@ El código fuente está organizado en los siguientes subdirectorios funcionales:
 
 *   **`experimentos/`**: Contiene los scripts principales para la ejecución de los experimentos de *fine-tuning*. Destaca un único script de entrenamiento y evaluación que ejecuta los diferentes métodos de adaptación eficiente.
 *   **`slurm/`**: *Scripts* de tipo bash (`.sh`) encargados de orquestar la ejecución de los experimentos en la supercomputadora Clementina XXI mediante el sistema de colas Slurm (e.j., `sbatch`).
+*   **`DDP/`**: Entrenamiento distribuido (DDP) de DoRA r=32 en Clementina XXI con PyTorch para XPU, Intel MPI y oneCCL. Incluye el script de entrenamiento y evaluación (`experimento_peft_multi.py`), su lanzador Slurm (`slurm_peft_clementina.sh`) y un monitor opcional de memoria (`monitor_mem.sh`, activado con `MONITOR_MEM=1`). Las métricas consolidadas están en [`metricas/DDP/`](../metricas/DDP/).
 *   **`preprocesamiento/`**: *Scripts* dedicados a la limpieza, transformación y formateo de los datos recolectados en su estructura final de partición.
 *   **`scraping/`**: *Scripts* orientados a la extracción de datos del repositorio SEDICI.
 *   **`embeddings/`**: *Scripts* didácticos y experimentales utilizados en el Capítulo 3 para ilustrar la inicialización de *token embeddings*, codificaciones posicionales (*positional encodings*) y la composición/normalización en el bloque Transformer.
